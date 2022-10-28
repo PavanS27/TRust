@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select a service</title>
+  </head>
+
+  <body
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    "
+  >
+    <div style="width: 50vw; height: 100vh; display: flex; padding: 50px">
+      <form
+        action="http://localhost:3000/service"
+        method="POST"
+        style="width: 100vw"
+      >
+        <input
+          type="text"
+          name="to"
+          placeholder="Enter 'to' address"
+          id="to"
+          style="padding: 10px; border: 1px solid grey"
+        /><br /><br />
+        <input
+          type="text"
+          name="message"
+          placeholder="Enter a message, Ex: Hello"
+          style="padding: 10px; border: 1px solid grey"
+        /><br /><br />
+        <input
+          type="submit"
+          value="Send Message"
+          style="
+            color: white;
+            padding: 8px 20px;
+            background-color: #da6e27;
+            border: 1px solid #da6e27;
+            cursor: pointer;
+          "
+        /><br /><br />
+        <button
+          onclick="sendTemp()"
+          style="
+            color: white;
+            padding: 8px 20px;
+            background-color: #da6e27;
+            border: 1px solid #da6e27;
+            cursor: pointer;
+          "
+        >
+          Send Temperature to address</button
+        ><br /><br />
+
+        <ul style="font-size: 20px" id="container"></ul>
+      </form>
+    </div>
+
+    <div
+      style="
+        width: 50vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: -800px;
+        margin-right: -250px;
+      "
+    >
+      <table id="table" style="border: 1px solid black; padding: 12px"></table>
+    </div>
+    <div
+      style="
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        left: 80%;
+        top: 30%;
+      "
+    >
+      <button
+        onclick="rateService()"
+        style="
+          color: white;
+          padding: 8px 20px;
+          background-color: #da6e27;
+          border: 1px solid #da6e27;
+          cursor: pointer;
+        "
+      >
+        Rate a service provider
+      </button>
+      <div id="butcont"></div>
+    </div>
+  </body>
+  <style>
+    #serviceSelection{
+      width: 100vw;
+      position: absolute;
+      left: 78%;
+      top: 40%;
+      
+    }
+    #score,#key{
+      padding: 5px;
+      border: 1px solid grey;
+      
+    }
+    #scores{
+      position: absolute;
+      left: -5%;
+    }
+  </style>
+
+  <script type="text/javascript">
+    var to = "";
+    function enterScore(name) {
+      to = name;
+      console.log(to);
+      var service = document.getElementById("serviceSelection");
+      service.innerHTML =
+        "<div id='scores'><input id='score' type='text' name='score' placeholder='Enter a Trust Score'/> <input id='key' type='text' name='key' placeholder='Enter your key'/> <button style='color: white;padding: 8px 20px;background-color: #da6e27;border: 1px solid #da6e27;cursor: pointer;' onclick='submitScore() '>Submit</button></div>";
+    }
+
+    function rateService() {
+      var service = document.createElement("div");
+      service.setAttribute("id", "serviceSelection");
+      service.innerText = "Works";
+      service.innerHTML =
+        "<button id='pavan' style='color: white;padding: 8px 20px;background-color: #da6e27;border: 1px solid #da6e27;cursor: pointer;'>Pavan</button> <button id='akash' style='color: white;padding: 8px 20px;background-color: #da6e27;border: 1px solid #da6e27;cursor: pointer;'>Akash</button> <button id='varun' style='color: white;padding: 8px 20px;background-color: #da6e27;border: 1px solid #da6e27;cursor: pointer;'>Varun</button>";
+      document.body.appendChild(service);
+      document
+        .getElementById("pavan")
+        .addEventListener("click", () => enterScore("pavan"));
+      document
+        .getElementById("akash")
+        .addEventListener("click", () => enterScore("akash"));
+      document
+        .getElementById("varun")
+        .addEventListener("click", () => enterScore("varun"));
+    }
+    function submitScore() {
+      var score = document.getElementById("score");
+      var key = document.getElementById("key").value;
+      score = score.value;
+      console.log(score);
+      fetch("http://localhost:3000/score", {
+        method: "POST",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: to,
+          key: key.toString(),
+          score: score.toString(),
+        }),
+      })
+        .then(function (res) {
+          return res.json();
+        })
+        .then(function (data) {
+          console.log(JSON.stringify(data));
+        });
+    }
+  </script>
+
+  <script>
+    //import { fs } from "";
+    function getMessage(){
+      fetch("http://localhost:3000/logs")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data[1]);
+        var container = document.getElementById("container");
+        data = data.map(
+          (e) =>
+            "<li> From: " +
+            e.from.toString() +
+            "<br/>" +
+            " Message: " +
+            e.message.toString() +
+            "</li>"
+        );
+        container.innerHTML = data;
+      });
+      setTimeout(getMessage,500)
+    }
+    getMessage()
+    
+    async function sendTemp() {
+      // var text = "";
+      // fs.readFile('../data/dummy.txt', 'utf-8', (err,data)=>{
+      //     text = data;
+      // })
+      var toAdress = document.getElementById("to");
+      var to = toAdress.value;
+      console.log(to);
+      var tempData = [56, 75, 23, 45, 62, 23, 12, 34, 35];
+      var data = JSON.stringify({ to: to, message: tempData });
+      console.log(data);
+      await fetch(
+        "http://localhost:3000/service",
+
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+          body: data,
+        }
+      )
+        .then(function (res) {
+          return res.json();
+        })
+        .then(function (data) {
+          alert(JSON.stringify(data));
+        });
+    }
+  </script>
+
+  <script>
+    fetch("http://localhost:3000/scoreTable")
+      .then((res) => res.json())
+      .then((data) => {
+        var x = document.getElementById("table");
+        x.innerHTML = `
+        
+  <tr>
+    <th style="border:1px solid black;padding: 15px">User</th>
+    <th style="border:1px solid black;padding: 15px">Trust Score</th>
+  </tr>
+  <tr>
+    <td style="border:1px solid black;padding: 15px">varun</td>
+    <td style="border:1px solid black;padding: 15px">${data.varun}</td>
+  </tr>
+  <tr>
+    <td style="border:1px solid black;padding: 15px">pavan</td>
+    <td style="border:1px solid black;padding: 15px">${data.pavan}</td>
+  </tr>
+  <tr>
+    <td style="border:1px solid black;padding: 15px">akash</td>
+    <td style="border:1px solid black;padding: 15px">${data.akash}</td>
+  </tr>
+
+
+        `;
+      });
+  </script>
+</html>

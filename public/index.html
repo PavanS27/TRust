@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    
+    <div class="form1">
+
+      <form action="http://localhost:3000/" method="POST">
+        <input type="text" name="name" placeholder="Enter JID" /><br /><br />
+        <input
+          type="text"
+          name="password"
+          placeholder="Enter Password"
+        /><br /><br />
+        <input
+          type="submit"
+          value="Log In"
+          style="
+            color: white;
+            margin-left: 66px;
+            background-color: #da6e27;
+            border: 1px solid #da6e27;
+            cursor: pointer;
+            padding: 8px 15px;
+          "
+        />
+      </form>
+    </div>
+  </body>
+  <style>
+    html,
+    body {
+      overflow: hidden;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .form1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.15); */
+      padding: 100px;
+    }
+
+    input {
+      padding: 10px;
+
+      border: 1px solid gray;
+    }
+  </style>
+</html>
